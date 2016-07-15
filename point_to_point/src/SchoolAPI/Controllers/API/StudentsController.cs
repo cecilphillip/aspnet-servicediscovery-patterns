@@ -1,42 +1,73 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-
+using SchoolAPI.Filter;
+using SchoolAPI.Infrastructure;
+using SchoolAPI.Models;
 
 namespace SchoolAPI.Controllers.API
 {
     [Route("api/[controller]")]
     public class StudentsController : Controller
     {
-        // GET: api/values
+        private readonly DataStore _dataStore;
+
+        public StudentsController(DataStore dataStore)
+        {
+            _dataStore = dataStore;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            if (_dataStore.Students != null)
+                return Ok(_dataStore.Students);
+
+            return NotFound();
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var student = _dataStore.Students.SingleOrDefault(c => c.ID == id);
+            if (student != null)
+            {
+                return Ok(student);
+            }
+
+            return NotFound();
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        [ValidateModel]
+        public IActionResult Post([FromBody]Student student)
         {
+            _dataStore.Students.Add(student);
+            return Created(Request.GetDisplayUrl() + "/" + student.ID, student);
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult Put(int id, [FromBody]Student student)
         {
+            var exisitingStudent = _dataStore.Students.SingleOrDefault(c => c.ID == id);
+
+            if (exisitingStudent == null) return NotFound();
+
+            _dataStore.Students.Remove(exisitingStudent);
+            _dataStore.Students.Add(student);
+
+            return Ok();
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var exisitingStudent = _dataStore.Students.SingleOrDefault(c => c.ID == id);
+
+            if (exisitingStudent == null) return NotFound();
+
+            _dataStore.Students.Remove(exisitingStudent);
+            return Ok();
         }
     }
 }
