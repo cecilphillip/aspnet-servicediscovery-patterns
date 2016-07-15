@@ -42,8 +42,7 @@ namespace SchoolClient
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json");
 
-            configuration = builder.Build();
-            
+            configuration = builder.Build();            
         }
 
         private static void ListStudents()

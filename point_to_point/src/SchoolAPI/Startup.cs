@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SchoolAPI.Infrastructure;
 using Swashbuckle.Swagger.Model;
 
 namespace SchoolAPI
@@ -24,6 +25,8 @@ namespace SchoolAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<DataStore>();
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("default_policy", pb =>
