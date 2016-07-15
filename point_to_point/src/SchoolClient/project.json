@@ -6,10 +6,10 @@
 
   "dependencies": {
     "Microsoft.Extensions.Logging.Console": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0"
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "System.Net.Http": "4.1.0"
   },
   "frameworks": {
-    "net461": {},
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {

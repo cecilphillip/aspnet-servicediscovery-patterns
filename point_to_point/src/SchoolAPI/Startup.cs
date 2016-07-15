@@ -17,7 +17,6 @@ namespace SchoolAPI
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json");
                 
-
             Configuration = builder.Build();
         }
 
