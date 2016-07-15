@@ -29,5 +29,4 @@ nuget.exe
 .settings
 node_modules
 bower_components
-*launchSettings.json
 wwwroot
