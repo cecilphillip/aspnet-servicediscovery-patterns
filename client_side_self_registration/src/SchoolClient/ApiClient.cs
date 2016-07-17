@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Consul;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Polly;
@@ -12,18 +13,11 @@ using SchoolClient.Models;
 
 namespace SchoolClient
 {
-    public class Config
-    {
-        public string BaseUrl { get; set; }
-        public string StudentResource { get; set; }
-        public string CoursesResource { get; set; }
-    }
-
     public class ApiClient
     {
         const string API_CONFIG_SECTION = "school-api";
 
-        private readonly List<Config> _serverConfigs;
+        private readonly List<Uri> _serverUrls;
         private readonly IConfigurationRoot _configuration;
         private readonly HttpClient _apiClient;
         private readonly RetryPolicy _serverRetryPolicy;
@@ -34,13 +28,28 @@ namespace SchoolClient
             _configuration = configuration;
 
             _apiClient = new HttpClient();
-            _serverConfigs = new List<Config>();
-            configuration.GetSection(API_CONFIG_SECTION).Bind(_serverConfigs);
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             //TODO: Validate server configs
+            _serverUrls = new List<Uri>();
+            var consulClient = new ConsulClient(c =>
+            {
+                var uri = new Uri(_configuration["consulConfig:address"]);
+                c.Address = uri;
+            });
 
-            var retries = _serverConfigs.Count() * 2;
+            var services = consulClient.Agent.Services().Result.Response;
+            foreach (var service in services)
+            {
+                var isSchoolApi = service.Value.Tags.Any(t => t == "School") && service.Value.Tags.Any(t => t == "Students");
+                if (isSchoolApi)
+                {
+                    var serviceUri = new Uri($"{service.Value.Address}:{service.Value.Port}");
+                    _serverUrls.Add(serviceUri);
+                }
+            }
+
+            var retries = _serverUrls.Count * 2;
             _serverRetryPolicy = Policy.Handle<HttpRequestException>()
                .RetryAsync(retries, (exception, retryCount) =>
                {
@@ -55,7 +64,7 @@ namespace SchoolClient
                 Console.WriteLine("trying next server... \n");
                 _currentConfigIndex++;
 
-                if (_currentConfigIndex > _serverConfigs.Count - 1)
+                if (_currentConfigIndex > _serverUrls.Count - 1)
                     _currentConfigIndex = 0;
             }
         }
@@ -64,8 +73,8 @@ namespace SchoolClient
         {
             return _serverRetryPolicy.ExecuteAsync(async () =>
                 {
-                    var config = _serverConfigs[_currentConfigIndex];
-                    var response = await _apiClient.GetAsync(config.BaseUrl + config.StudentResource).ConfigureAwait(false);
+                    var serverUrl = _serverUrls[_currentConfigIndex];
+                    var response = await _apiClient.GetAsync(new Uri(serverUrl, "api/students")).ConfigureAwait(false);
                     var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     return JsonConvert.DeserializeObject<IEnumerable<Student>>(content);
                 });
@@ -75,8 +84,8 @@ namespace SchoolClient
         {
             return _serverRetryPolicy.ExecuteAsync(async () =>
             {
-                var config = _serverConfigs[_currentConfigIndex];
-                var response = await _apiClient.GetAsync(config.BaseUrl + config.CoursesResource).ConfigureAwait(false);
+                var serverUrl = _serverUrls[_currentConfigIndex];
+                var response = await _apiClient.GetAsync(new Uri(serverUrl, "api/courses")).ConfigureAwait(false);
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<IEnumerable<Course>>(content);
             });
