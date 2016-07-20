@@ -3,15 +3,14 @@
   "buildOptions": {
     "emitEntryPoint": true
   },
-
   "dependencies": {
-    "Microsoft.Extensions.Logging.Console": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.Extensions.Configuration.Binder": "1.0.0",
-    "System.Net.Http": "4.1.0",
-    "Polly": "4.3.0",
+    "Consul": "0.6.4.8-alpha2",
     "Microsoft.AspNet.WebApi.Client": "5.2.2",
-    "Consul": "0.6.4.8-alpha2"
+    "Microsoft.Extensions.Configuration.Binder": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.Logging.Console": "1.0.0",
+    "Polly": "4.3.0",
+    "System.Net.Http": "4.1.0"
   },
   "frameworks": {
     "netcoreapp1.0": {
@@ -27,13 +26,9 @@
       ]
     }
   },
-
-
   "publishOptions": {
     "include": [
-
       "appsettings.json"
     ]
   }
-
 }

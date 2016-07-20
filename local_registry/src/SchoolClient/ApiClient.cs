@@ -21,21 +21,20 @@ namespace SchoolClient
 
     public class ApiClient
     {
-        const string API_CONFIG_SECTION = "school-api";
+        private const string API_CONFIG_SECTION = "school-api";
 
         private readonly List<Config> _serverConfigs;
-        private readonly IConfigurationRoot _configuration;
         private readonly HttpClient _apiClient;
         private readonly RetryPolicy _serverRetryPolicy;
-        private int _currentConfigIndex = 0;
+        private int _currentConfigIndex;
 
         public ApiClient(IConfigurationRoot configuration)
         {
-            _configuration = configuration;
-
             _apiClient = new HttpClient();
+
             _serverConfigs = new List<Config>();
             configuration.GetSection(API_CONFIG_SECTION).Bind(_serverConfigs);
+
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             //TODO: Validate server configs

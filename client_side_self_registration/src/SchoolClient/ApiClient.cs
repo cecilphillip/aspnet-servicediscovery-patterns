@@ -15,8 +15,6 @@ namespace SchoolClient
 {
     public class ApiClient
     {
-        const string API_CONFIG_SECTION = "school-api";
-
         private readonly List<Uri> _serverUrls;
         private readonly IConfigurationRoot _configuration;
         private readonly HttpClient _apiClient;
@@ -29,9 +27,8 @@ namespace SchoolClient
 
             _apiClient = new HttpClient();
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            //TODO: Validate server configs
             _serverUrls = new List<Uri>();
+
             var consulClient = new ConsulClient(c =>
             {
                 var uri = new Uri(_configuration["consulConfig:address"]);
@@ -56,7 +53,6 @@ namespace SchoolClient
                    ChooseNextServer(retryCount);
                });
         }
-
         private void ChooseNextServer(int retryCount)
         {
             if (retryCount % 2 == 0)
