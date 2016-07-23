@@ -34,13 +34,13 @@ namespace SchoolClient
         private static async Task ListStudents()
         {
             var students = await _apiClient.GetStudents();
-            Console.WriteLine($"{students.Count()}");
+            Console.WriteLine($"Student Count: {students.Count()}");
         }
 
         private static async Task ListCourses()
         {
             var courses = await _apiClient.GetCourses();
-            Console.WriteLine($"{courses.Count()}");
+            Console.WriteLine($"Courses Count: {courses.Count()}");
         }
     }
 }

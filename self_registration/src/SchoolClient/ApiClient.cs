@@ -19,7 +19,7 @@ namespace SchoolClient
         private readonly IConfigurationRoot _configuration;
         private readonly HttpClient _apiClient;
         private readonly RetryPolicy _serverRetryPolicy;
-        private int _currentConfigIndex = 0;
+        private int _currentConfigIndex;
 
         public ApiClient(IConfigurationRoot configuration)
         {
@@ -41,7 +41,7 @@ namespace SchoolClient
                 var isSchoolApi = service.Value.Tags.Any(t => t == "School") && service.Value.Tags.Any(t => t == "Students");
                 if (isSchoolApi)
                 {
-                    var serviceUri = new Uri($"{service.Value.Address}:{service.Value.Port}");
+                    var serviceUri = new Uri($"{service.Value.Address}:{service.Value.Port}");                    
                     _serverUrls.Add(serviceUri);
                 }
             }

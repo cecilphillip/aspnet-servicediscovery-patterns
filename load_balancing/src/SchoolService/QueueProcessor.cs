@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -30,7 +31,7 @@ namespace SchoolService
             _model = _connection.CreateModel();
             _model.BasicQos(0, 1, false);
 
-            _model.QueueDeclare(config.QueueName, true, false, true, null);
+            _model.QueueDeclare(config.QueueName, false, false, true, null);
 
             _dataStore = new DataStore();
         }
@@ -51,16 +52,20 @@ namespace SchoolService
 
                 var result = string.Empty;
 
+                Console.WriteLine("*** Processing Request ***");
+                Console.WriteLine($"*** Process ID {Process.GetCurrentProcess().Id} ***");
                 switch (message)
                 {
                     case "students":
+                        Console.WriteLine("Retrieving Students");
                         result = JsonConvert.SerializeObject(_dataStore.Students);
                         break;
                     case "courses":
+                        Console.WriteLine("Retrieving Courses");
                         result = JsonConvert.SerializeObject(_dataStore.Courses);
                         break;
                     default:
-                        Console.WriteLine($"Cannot process: {message}");
+                        Console.WriteLine($"Could Not Process: {message}");
                         break;
                 }
 
@@ -71,7 +76,7 @@ namespace SchoolService
 
             _model.BasicConsume(_config.QueueName, false, consumer);
 
-            Console.WriteLine(" Press [enter] to exit.");
+            Console.WriteLine("Press [enter] to exit.");
             Console.ReadLine();
         }
     }

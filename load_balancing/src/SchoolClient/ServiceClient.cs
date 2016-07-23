@@ -32,7 +32,7 @@ namespace SchoolClient
             _model = _connection.CreateModel();
 
             _sendQueue = configuration.GetSection("rabbitmq-settings")["sendQueue"];
-            _model.QueueDeclare(_sendQueue, true, false, true, null);
+            _model.QueueDeclare(_sendQueue, false, false, true, null);
 
             replyQueueName = _model.QueueDeclare().QueueName;
 

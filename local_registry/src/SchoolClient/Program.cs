@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
@@ -16,12 +14,14 @@ namespace SchoolClient
         {
             LoadConfig();
             _apiClient = new ApiClient(_configuration);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.White;
 
             ListStudents().Wait();
             ListCourses().Wait();
 
-            Console.ReadLine();
             Console.ResetColor();
+            Console.ReadLine();          
         }
 
         private static void LoadConfig()

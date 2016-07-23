@@ -51,7 +51,7 @@ namespace SchoolClient
         {
             if (retryCount % 2 == 0)
             {
-                Console.WriteLine("trying next server... \n");
+                Console.WriteLine("Trying Next Server... \n");
                 _currentConfigIndex++;
 
                 if (_currentConfigIndex > _serverConfigs.Count - 1)
