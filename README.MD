@@ -25,3 +25,4 @@ These were originally used as demos for a talk I gave at a [dotNet Miami Meetup]
 - [Microservice Architecture](http://microservices.io/)
 - [Martin Fowler's Microservices Resource Guide](http://martinfowler.com/microservices/)
 - [ASP .NET Core docs](https://docs.asp.net/en/latest/)
+- [Microphone - Self announcing services](https://github.com/rogeralsing/Microphone/)
