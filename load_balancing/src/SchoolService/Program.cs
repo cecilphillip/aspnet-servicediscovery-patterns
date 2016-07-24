@@ -5,21 +5,29 @@ namespace SchoolService
     public class Program
     {
         public static void Main(string[] args)
-        {  var config = new QueueConfig
+        {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var rabbitSettings = configuration.GetSection("rabbitmq-settings");
+
+            var config = new QueueConfig
             {
-               HostName = "10.211.55.2",
-               UserName = "admin",
-               Password = "admin",
-               QueueName = "api.school"
+               HostName = rabbitSettings["hostName"],
+               UserName = [rabbitSettings"userName"],
+               Password = rabbitSettings["password"],
+               QueueName = rabbitSettings["sendQueue"]
             };
 
             DisplayRabbitSettings(config);
             Console.WriteLine("Starting School Service Queue Processor....");
             Console.WriteLine();
 
-          
+
             var processor = new QueueProcessor(config);
-            processor.Start();            
+            processor.Start();
         }
 
         private static void DisplayRabbitSettings(QueueConfig config)
