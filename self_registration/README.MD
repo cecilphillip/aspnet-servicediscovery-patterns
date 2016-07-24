@@ -6,14 +6,16 @@ service to register itself. You can compare this to clocking into work for your 
 telling the registration service it's available, what it's address is and also provide some other meta data if
 needed. [Consul](https://www.consul.io/) by HashiCorp is what we'll use as our registration service.
 
-To run this demo you'll need to [download Consul](https://www.consul.io/downloads.html) and start the service.
+To run this demo you'll need to [download](https://www.consul.io/downloads.html) and
+[install](https://www.consul.io/intro/getting-started/install.html) Consul. Now [start](https://www.consul.io/intro/getting-started/agent.html)
+the service.
 The following command is enough in most cases to run a single node consul environment
 ```
 consul agent -dev
 ```
 
 If you have multiple IPs on your machine (usually the case if you have VM software setup or multiple network adapters) then
-the previous command would have failed. Instead, you'll have to specify the IP you wish for Consul to listen on. The following
+the previous command might have failed. Instead, you'll have to specify the IP you wish for Consul to listen on. The following
 startup options might help.
 
 ```
@@ -50,4 +52,4 @@ dotnet run
 If everything is configured currectly, your client will retrieve the list of registered servers from our registration serivce
 AKA Consul. Right now there's only one, but feel to start up another instance of the API in another command prompt window.
 
-See [Health Checks](../health_checks/README.MD)
+Next [Health Checks](../health_checks/README.MD)

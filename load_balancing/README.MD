@@ -13,7 +13,7 @@ the RabbitMQ broker will distribute the requests between all of the available se
 
 To get started, [download and install RabbitMQ](https://www.rabbitmq.com/download.html) on your OS. Start the RabbitMQ service
 (if is hasn't been started already). You can use the `rabbitmqctl` command line utility to check the status of your RabbitMQ installation.
-As an alternative, you could always setup a free RabbitMQ instance online with (CloudAMQP)[https://www.cloudamqp.com/]
+As an alternative, you could always setup a free RabbitMQ instance online with [CloudAMQP](https://www.cloudamqp.com)
 
 You might have to update the sample projects to point to your RabbitMQ instance. Update the *appsetting.json* file in both
 the client and server projects.
