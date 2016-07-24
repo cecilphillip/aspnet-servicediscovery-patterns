@@ -29,4 +29,4 @@ dotnet run
 After a few seconds, you should see the client print "Trying next server", before
 successful making a request to your running service.
 
-Next see [Self Registration]()
+Next see [Self Registration](../self_registration/README.MD)

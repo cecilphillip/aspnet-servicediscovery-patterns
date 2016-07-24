@@ -50,4 +50,4 @@ dotnet run
 If everything is configured currectly, your client will retrieve the list of registered servers from our registration serivce
 AKA Consul. Right now there's only one, but feel to start up another instance of the API in another command prompt window.
 
-See [Health Checks]()
+See [Health Checks](../health_checks/README.MD)

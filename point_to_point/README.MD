@@ -13,4 +13,4 @@ dotnet run
 
 The client inspects it's configuration (appsettings.json) file for the address of the API, then it makes 2 requests from the API.
 
-Next See [Local Registry]()
+Next See [Local Registry](../local_registry/README.MD)
