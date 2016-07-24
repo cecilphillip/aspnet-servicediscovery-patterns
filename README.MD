@@ -12,6 +12,7 @@ These were originally used as demos for a talk I gave at a [dotNet Miami Meetup]
 
 
 #### Built With
+- [ASP.NET Core](http://www.asp.net/core)
 - [Bogus](https://github.com/bchavez/Bogus) - Fake Data Generator
 - [Consul](https://www.consul.io) - Distributed Service Discovery and Configuration
 - [Consul .NET](https://github.com/PlayFab/consuldotnet/) - PlayFab .NET Consul client
