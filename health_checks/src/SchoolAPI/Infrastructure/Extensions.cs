@@ -30,7 +30,7 @@ namespace SchoolAPI.Infrastructure
                 var uri = new Uri(address);
                 var registration = new AgentServiceRegistration()
                 {
-                    ID = consulConfig.Value.ServiceID,
+                    ID = $"{consulConfig.Value.ServiceID}-{uri.Port}",
                     Name = consulConfig.Value.ServiceName,
                     Address = $"{uri.Scheme}://{uri.Host}",
                     Port = uri.Port,
