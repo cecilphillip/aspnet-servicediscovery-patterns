@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "Bogus": "7.1.4",
-    "Consul": "0.6.4.8-alpha2",
+    "Consul": "0.7.0-rc1",
     "Microsoft.AspNetCore.Cors": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Http.Extensions": "1.0.0",

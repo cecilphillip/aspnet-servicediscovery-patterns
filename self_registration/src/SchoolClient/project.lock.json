@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     ".NETCoreApp,Version=v1.0": {
-      "Consul/0.6.4.8-alpha2": {
+      "Consul/0.7.0-rc1": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -2516,12 +2516,12 @@
     }
   },
   "libraries": {
-    "Consul/0.6.4.8-alpha2": {
-      "sha512": "q7AEA5fPrW7ts7Q0UZ5xIfekW6bh0dzEQeA63ZCVwsIX4bwMCvyAlUIWiItnzdxXUYB/HSYbvYLFkDz9nQiGpA==",
+    "Consul/0.7.0-rc1": {
+      "sha512": "NpSr+LllCl8Ja0y0y9zHzNyiO4hMwmSxwvo/HhMVK8Nd2pOBmuMsKmH64ofngeD9MbFOo9oMXW/M9EHGy4aAjQ==",
       "type": "package",
-      "path": "Consul/0.6.4.8-alpha2",
+      "path": "Consul/0.7.0-rc1",
       "files": [
-        "Consul.0.6.4.8-alpha2.nupkg.sha512",
+        "Consul.0.7.0-rc1.nupkg.sha512",
         "Consul.nuspec",
         "lib/net451/Consul.dll",
         "lib/netstandard1.3/Consul.dll"
@@ -7757,7 +7757,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Consul >= 0.6.4.8-alpha2",
+      "Consul >= 0.7.0-rc1",
       "Microsoft.AspNet.WebApi.Client >= 5.2.2",
       "Microsoft.Extensions.Configuration.Binder >= 1.0.0",
       "Microsoft.Extensions.Configuration.Json >= 1.0.0",

@@ -20,7 +20,7 @@
           "lib/netstandard1.3/Bogus.dll": {}
         }
       },
-      "Consul/0.6.4.8-alpha2": {
+      "Consul/0.7.0-rc1": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -3617,7 +3617,7 @@
           "lib/net40/Bogus.dll": {}
         }
       },
-      "Consul/0.6.4.8-alpha2": {
+      "Consul/0.7.0-rc1": {
         "type": "package",
         "frameworkAssemblies": [
           "System.Net.Http",
@@ -5549,12 +5549,12 @@
         "lib/netstandard1.3/Bogus.xml"
       ]
     },
-    "Consul/0.6.4.8-alpha2": {
-      "sha512": "q7AEA5fPrW7ts7Q0UZ5xIfekW6bh0dzEQeA63ZCVwsIX4bwMCvyAlUIWiItnzdxXUYB/HSYbvYLFkDz9nQiGpA==",
+    "Consul/0.7.0-rc1": {
+      "sha512": "NpSr+LllCl8Ja0y0y9zHzNyiO4hMwmSxwvo/HhMVK8Nd2pOBmuMsKmH64ofngeD9MbFOo9oMXW/M9EHGy4aAjQ==",
       "type": "package",
-      "path": "Consul/0.6.4.8-alpha2",
+      "path": "Consul/0.7.0-rc1",
       "files": [
-        "Consul.0.6.4.8-alpha2.nupkg.sha512",
+        "Consul.0.7.0-rc1.nupkg.sha512",
         "Consul.nuspec",
         "lib/net451/Consul.dll",
         "lib/netstandard1.3/Consul.dll"
@@ -11451,7 +11451,7 @@
   "projectFileDependencyGroups": {
     "": [
       "Bogus >= 7.1.4",
-      "Consul >= 0.6.4.8-alpha2",
+      "Consul >= 0.7.0-rc1",
       "Microsoft.AspNetCore.Cors >= 1.0.0",
       "Microsoft.AspNetCore.Diagnostics >= 1.0.0",
       "Microsoft.AspNetCore.Http.Extensions >= 1.0.0",
