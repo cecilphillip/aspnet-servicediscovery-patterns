@@ -5,15 +5,23 @@
   },
 
   "dependencies": {
-    "RabbitMQ.Client": "3.6.3",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
     "Microsoft.Extensions.Configuration.Binder": "1.0.0",
-    "System.ComponentModel.Annotations": "4.1.0"
+    "System.ComponentModel.Annotations": "4.1.0",
+    "RabbitMQ.Client": "4.0.0-rc-1"
   },
 
   "frameworks": {
-    "net461": {}
+    "net461": {},
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.0",
+          "type": "platform"
+        }
+      }
+    } 
   },
   "publishOptions": {
     "include": [
