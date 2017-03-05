@@ -6,18 +6,18 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SchoolAPI.Infrastructure;
-using Swashbuckle.Swagger.Model;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SchoolAPI
 {
     public class Startup
     {
         public Startup(IHostingEnvironment env)
-        {           
+        {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json");
-                
+
             Configuration = builder.Build();
         }
 
@@ -26,7 +26,7 @@ namespace SchoolAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<DataStore>();
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("default_policy", pb =>
@@ -34,7 +34,7 @@ namespace SchoolAPI
                     pb.AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowAnyOrigin();
-                });                
+                });
             });
 
             services.AddMvc().AddJsonOptions(options =>
@@ -45,17 +45,17 @@ namespace SchoolAPI
 
             services.AddSwaggerGen(c =>
             {
-                c.SingleApiVersion(new Info
+                c.SwaggerDoc("v1",new Info
                 {
                     Version = "v1",
                     Title = "Simple School API",
-                    Description = "A demo API "
+                    Description = "A demo API"
                 });
             });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {           
+        {
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())
@@ -64,14 +64,16 @@ namespace SchoolAPI
             }
 
             app.UseMvc();
-           
 
-            app.UseSwagger((httpRequest, swaggerDoc) =>
+            app.UseSwagger(c =>
             {
-                swaggerDoc.Host = httpRequest.Host.Value;
+                c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
             });
 
-            app.UseSwaggerUi();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+            });
 
             app.UseWelcomePage();
         }
