@@ -1,18 +1,13 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A1264CB-70DA-41E2-859E-CD97B356BF5C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{34E9C19A-4EA8-46DD-B647-C909A9A8EF78}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolService", "src\SchoolService\SchoolService.csproj", "{DC46CFA5-7425-4E8F-81A9-C36681EF6131}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SchoolService", "src\SchoolService\SchoolService.xproj", "{DC46CFA5-7425-4E8F-81A9-C36681EF6131}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SchoolClient", "src\SchoolClient\SchoolClient.xproj", "{5395AFDC-43A1-4E7E-ACEF-5FB32EDA40EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolClient", "src\SchoolClient\SchoolClient.csproj", "{5395AFDC-43A1-4E7E-ACEF-5FB32EDA40EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

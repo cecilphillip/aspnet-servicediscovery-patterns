@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-
-    <RuntimeIdentifier Condition=" '$(TargetFramework)' == 'net461' ">win7-x86</RuntimeIdentifier>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>SchoolAPI</AssemblyName>
     <OutputType>Exe</OutputType>

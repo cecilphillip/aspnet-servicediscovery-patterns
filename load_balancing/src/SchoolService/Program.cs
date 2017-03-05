@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace SchoolService
 {
@@ -6,7 +8,7 @@ namespace SchoolService
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -16,7 +18,7 @@ namespace SchoolService
             var config = new QueueConfig
             {
                HostName = rabbitSettings["hostName"],
-               UserName = [rabbitSettings"userName"],
+               UserName = rabbitSettings["userName"],
                Password = rabbitSettings["password"],
                QueueName = rabbitSettings["sendQueue"]
             };
