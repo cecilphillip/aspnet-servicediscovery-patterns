@@ -6,7 +6,7 @@
     <AssemblyName>SchoolAPI</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>SchoolAPI</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <PackageTargetFallback >$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
