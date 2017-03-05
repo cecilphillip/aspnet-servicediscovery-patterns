@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SchoolAPI.Infrastructure;
-using Swashbuckle.Swagger.Model;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SchoolAPI
 {
@@ -53,7 +53,7 @@ namespace SchoolAPI
 
             services.AddSwaggerGen(c =>
             {
-                c.SingleApiVersion(new Info
+                c.SwaggerDoc("v1",new Info
                 {
                     Version = "v1",
                     Title = "School API (Local REgistry)",
@@ -73,12 +73,15 @@ namespace SchoolAPI
 
             app.UseMvc();
 
-            app.UseSwagger((httpRequest, swaggerDoc) =>
+            app.UseSwagger(c =>
             {
-                swaggerDoc.Host = httpRequest.Host.Value;
+                c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
             });
 
-            app.UseSwaggerUi();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+            });
 
             app.UseWelcomePage();
 

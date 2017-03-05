@@ -99,8 +99,9 @@ namespace SchoolClient
             var checks = await _consulClient.Health.Service(_configuration["consulConfig:serviceName"]);
             foreach (var entry in checks.Response)
             {
-                var check = entry.Checks.Single(c => c.ServiceName == "school-api");
-                var isPassing = check.Status == "passing";
+                var check = entry.Checks.SingleOrDefault(c => c.ServiceName == "school-api");
+                if(check == null) continue;
+                var isPassing = check.Status == HealthStatus.Passing;
                 var serviceUri = new Uri($"{entry.Service.Address}:{entry.Service.Port}");
                 if (isPassing)
                 {
