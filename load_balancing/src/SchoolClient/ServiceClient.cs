@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Client.MessagePatterns;
 using SchoolClient.Models;
 
 namespace SchoolClient
@@ -12,12 +13,11 @@ namespace SchoolClient
     public class ServiceClient
     {
         private ConnectionFactory _connectionFactory;
-        private QueueingBasicConsumer _consumer;
         private IConnection _connection;
+        private Subscription _subscription;
         private IModel _model;
-
         private string _sendQueue;
-        private string replyQueueName;
+        private string _replyQueueName;
 
         public ServiceClient(IConfigurationRoot configuration)
         {
@@ -34,10 +34,9 @@ namespace SchoolClient
             _sendQueue = configuration.GetSection("rabbitmq-settings")["sendQueue"];
             _model.QueueDeclare(_sendQueue, false, false, true, null);
 
-            replyQueueName = _model.QueueDeclare().QueueName;
+            _replyQueueName = _model.QueueDeclare().QueueName;
+            _subscription = new Subscription(_model, _replyQueueName, true);
 
-            _consumer = new QueueingBasicConsumer(_model);
-            _model.BasicConsume(replyQueueName, true, _consumer);
         }
 
         public IEnumerable<Student> GetStudents() => SendRequest<IEnumerable<Student>>("students");
@@ -49,7 +48,7 @@ namespace SchoolClient
             var corrId = Guid.NewGuid().ToString();
 
             var props = _model.CreateBasicProperties();
-            props.ReplyTo = replyQueueName;
+            props.ReplyTo = _replyQueueName;
             props.CorrelationId = corrId;
 
             var messageBytes = Encoding.UTF8.GetBytes(message);
@@ -57,13 +56,12 @@ namespace SchoolClient
 
             while (true)
             {
-                var ea = (BasicDeliverEventArgs)_consumer.Queue.Dequeue();
-                if (ea.BasicProperties.CorrelationId == corrId)
-                {
-                    var resultString = Encoding.UTF8.GetString(ea.Body);
-                    var result = JsonConvert.DeserializeObject<T>(resultString);
-                    return result;
-                }
+                var delivery = _subscription.Next();
+                if (delivery.BasicProperties.CorrelationId != corrId) continue;
+
+                var resultString = Encoding.UTF8.GetString(delivery.Body);
+                var result = JsonConvert.DeserializeObject<T>(resultString);
+                return result;
             }
         }
     }
