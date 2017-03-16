@@ -70,6 +70,7 @@ namespace SchoolAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            
 
             app.UseMvc();
 
