@@ -62,7 +62,7 @@ namespace SchoolAPI
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime lifetime)
         {
             loggerFactory.AddConsole();
 
@@ -85,7 +85,7 @@ namespace SchoolAPI
 
             app.UseWelcomePage();
 
-            app.RegisterWithConsul();
+            app.RegisterWithConsul(lifetime);
         }
     }
 }
