@@ -12,8 +12,11 @@ namespace SchoolAPI
                 .AddCommandLine(args)
                 .Build();
 
+            var freePort = FreeTcpPort();
+
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
+                .UseUrls($"http://localhost:{freePort}")        
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
@@ -22,5 +25,14 @@ namespace SchoolAPI
 
             host.Run();
         }
+
+        private static int FreeTcpPort()
+        {
+            var l = new TcpListener(IPAddress.Loopback, 0);
+            l.Start();
+            var port = ((IPEndPoint)l.LocalEndpoint).Port;
+            l.Stop();
+            return port;
+        }        
     }
 }
