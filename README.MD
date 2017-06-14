@@ -5,11 +5,11 @@ This repo contains a samples of implementing Service Discovery patterns with ASP
 These were originally used as demos for a talk I gave at a [dotNet Miami Meetup](http://www.meetup.com/dotNetMiami/events/232614545/).
 
 ### Patterns Covered
-- [Point to Point](point_to_point/README.MD) <- start here :)
-- [Local Registry](local_registry/README.MD)
-- [Self Registration](self_registration/README.MD)
-- [Health Checks](health_checks/README.MD)
-- [Load Balancing](load_balancing/README.MD)
+- [Point to Point](point_to_point) <- start here :)
+- [Local Registry](local_registry)
+- [Self Registration](self_registration)
+- [Health Checks](health_checks)
+- [Load Balancing](load_balancing)
 
 
 #### Built With
