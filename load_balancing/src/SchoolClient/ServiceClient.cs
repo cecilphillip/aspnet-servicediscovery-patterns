@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -10,7 +11,7 @@ using SchoolClient.Models;
 
 namespace SchoolClient
 {
-    public class ServiceClient
+    public class ServiceClient: IDisposable
     {
         private ConnectionFactory _connectionFactory;
         private IConnection _connection;
@@ -18,9 +19,11 @@ namespace SchoolClient
         private IModel _model;
         private string _sendQueue;
         private string _replyQueueName;
+        private readonly ILogger<ServiceClient> _logger;
 
-        public ServiceClient(IConfigurationRoot configuration)
+        public ServiceClient(IConfigurationRoot configuration, ILogger<ServiceClient> logger)
         {
+            _logger = logger;
             _connectionFactory = new ConnectionFactory
             {
                 HostName = configuration.GetSection("rabbitmq-settings")["hostName"],
@@ -51,9 +54,12 @@ namespace SchoolClient
             props.ReplyTo = _replyQueueName;
             props.CorrelationId = corrId;
 
+            _logger.LogInformation($"Reply Queue: {_replyQueueName}\nCorrelation ID: {corrId}");
+
             var messageBytes = Encoding.UTF8.GetBytes(message);
             _model.BasicPublish("", _sendQueue, props, messageBytes);
 
+            _logger.LogInformation("Publishing message");
             while (true)
             {
                 var delivery = _subscription.Next();
@@ -64,5 +70,29 @@ namespace SchoolClient
                 return result;
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _logger.LogInformation("Disposing....");
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _model.Dispose();
+                    _connection.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SchoolClient
 {
@@ -13,13 +14,22 @@ namespace SchoolClient
         {
             LoadConfig();
 
-            _apiClient = new ServiceClient(_configuration);
+            var logger = new LoggerFactory().AddConsole().CreateLogger<ServiceClient>();
+            _apiClient = new ServiceClient(_configuration, logger);
 
-            ListStudents();
-            ListCourses();
-
-            Console.ReadLine();
-            Console.ResetColor();
+            using (_apiClient)
+            {
+                try
+                {
+                    ListStudents();
+                    ListCourses();
+                }
+                catch (Exception)
+                {
+                    logger.LogError("Unable to request resource");
+                }
+                Console.ReadLine();
+            }
         }
 
         private static void LoadConfig()

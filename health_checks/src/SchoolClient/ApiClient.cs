@@ -19,7 +19,7 @@ namespace SchoolClient
         private readonly List<Uri> _serverUrls;
         private readonly IConfigurationRoot _configuration;
         private readonly HttpClient _apiClient;
-        private readonly RetryPolicy _serverRetryPolicy;
+        private RetryPolicy _serverRetryPolicy;
         private readonly ConsulClient _consulClient;
         private int _currentConfigIndex;
         private readonly ILogger<ApiClient> _logger;
@@ -39,29 +39,37 @@ namespace SchoolClient
                 c.Address = uri;
             });
 
+
+        }
+
+        public async Task Initialize()
+        {
             _logger.LogInformation("Discovering Services from Consul.");
-            var services = _consulClient.Agent.Services().Result.Response;
-            foreach (var service in services)
+
+            var services = await _consulClient.Agent.Services();
+            foreach (var service in services.Response)
             {
                 var isSchoolApi = service.Value.Service == _configuration["consulConfig:serviceName"];
                 if (isSchoolApi)
                 {
-                    var checks = _consulClient.Health.Checks(_configuration["consulConfig:serviceName"]).Result;
+                    var checks = await _consulClient.Health.Checks(_configuration["consulConfig:serviceName"]);
 
                     var serviceUri = new Uri($"{service.Value.Address}:{service.Value.Port}");
                     _serverUrls.Add(serviceUri);
                 }
             }
-            _logger.LogInformation($"{_serverUrls.Count} endpoints found.");
 
+            _logger.LogInformation($"{_serverUrls.Count} endpoints found.");
             var retries = _serverUrls.Count * 2 - 1;
             _logger.LogInformation($"Retry count set to {retries}");
+
             _serverRetryPolicy = Policy.Handle<HttpRequestException>()
                .RetryAsync(retries, (exception, retryCount) =>
                {
                    ChooseNextServer(retryCount);
                });
         }
+
         private void ChooseNextServer(int retryCount)
         {
             if (retryCount % 2 == 0)
