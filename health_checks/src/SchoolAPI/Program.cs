@@ -20,7 +20,7 @@ namespace SchoolAPI
 
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
-                .UseUrls($"http://localhost:{freePort}")        
+                .UseUrls($"http://localhost:{freePort}")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
@@ -29,7 +29,7 @@ namespace SchoolAPI
 
             var loggingFactory = host.Services.GetService(typeof(ILoggerFactory)) as ILoggerFactory;
             var logger = loggingFactory.CreateLogger(nameof(Program));
-            logger.LogInformation($"{Process.GetCurrentProcess().Id}");
+            logger.LogInformation($"Process ID: {Process.GetCurrentProcess().Id}");
 
             host.Run();
         }
@@ -41,6 +41,6 @@ namespace SchoolAPI
             var port = ((IPEndPoint)l.LocalEndpoint).Port;
             l.Stop();
             return port;
-        }        
+        }
     }
 }

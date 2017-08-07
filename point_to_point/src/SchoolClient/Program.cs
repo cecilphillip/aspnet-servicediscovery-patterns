@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SchoolClient
 {
@@ -30,7 +33,7 @@ namespace SchoolClient
         {
             apiClient = new HttpClient
             {
-                BaseAddress = new Uri(configuration.GetSection(API_CONFIG_SECTION)[API_CONFIG_NAME_BASEURL])                
+                BaseAddress = new Uri(configuration.GetSection(API_CONFIG_SECTION)[API_CONFIG_NAME_BASEURL])
             };
 
             apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -42,21 +45,23 @@ namespace SchoolClient
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json");
 
-            configuration = builder.Build();            
+            configuration = builder.Build();
         }
 
         private static void ListStudents()
         {
+            Console.WriteLine($"Making request to {apiClient.BaseAddress}{API_CONFIG_NAME_STUDENTS_RESOURCE}");
             var response = apiClient.GetAsync(API_CONFIG_NAME_STUDENTS_RESOURCE).Result;
-            var content = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(content);
+            var students = response.Content.ReadAsStringAsync().Result;
+             Console.WriteLine($"Student Count: {students.Count()}\n");
         }
 
         private static void ListCourses()
         {
+             Console.WriteLine($"Making request to {apiClient.BaseAddress}{API_CONFIG_NAME_COURSES_RESOURCE}");
             var response = apiClient.GetAsync(API_CONFIG_NAME_COURSES_RESOURCE).Result;
-            var content = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(content);
+            var courses = response.Content.ReadAsStringAsync().Result;
+            Console.WriteLine($"Course Count: {courses.Count()}\n");
         }
     }
 }

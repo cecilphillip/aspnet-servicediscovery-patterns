@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
@@ -27,19 +28,20 @@ namespace SchoolClient
         private readonly HttpClient _apiClient;
         private readonly RetryPolicy _serverRetryPolicy;
         private int _currentConfigIndex;
+        private ILogger<ApiClient> _logger;
 
-        public ApiClient(IConfigurationRoot configuration)
+        public ApiClient(IConfigurationRoot configuration, ILogger<ApiClient> logger)
         {
             _apiClient = new HttpClient();
+            _logger = logger;
 
             _serverConfigs = new List<Config>();
             configuration.GetSection(API_CONFIG_SECTION).Bind(_serverConfigs);
 
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            //TODO: Validate server configs
-
-            var retries = _serverConfigs.Count() * 2;
+            var retries = _serverConfigs.Count() * 2 - 1;
+            _logger.LogInformation($"Retry count set to {retries}");
             _serverRetryPolicy = Policy.Handle<HttpRequestException>()
                .RetryAsync(retries, (exception, retryCount) =>
                {
@@ -51,7 +53,7 @@ namespace SchoolClient
         {
             if (retryCount % 2 == 0)
             {
-                Console.WriteLine("Trying Next Server... \n");
+                _logger.LogWarning("Trying Next Server... \n");
                 _currentConfigIndex++;
 
                 if (_currentConfigIndex > _serverConfigs.Count - 1)
@@ -64,9 +66,14 @@ namespace SchoolClient
             return _serverRetryPolicy.ExecuteAsync(async () =>
                 {
                     var config = _serverConfigs[_currentConfigIndex];
-                    var response = await _apiClient.GetAsync(config.BaseUrl + config.StudentResource).ConfigureAwait(false);
-                    var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return JsonConvert.DeserializeObject<IEnumerable<Student>>(content);
+                    var requestPath = $"{config.BaseUrl}{config.StudentResource}";
+
+                    _logger.LogInformation($"Making request to {requestPath}");
+
+                    var response = await _apiClient.GetAsync(requestPath).ConfigureAwait(false);
+                    var students = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                    return JsonConvert.DeserializeObject<IEnumerable<Student>>(students);
                 });
         }
 
@@ -75,9 +82,14 @@ namespace SchoolClient
             return _serverRetryPolicy.ExecuteAsync(async () =>
             {
                 var config = _serverConfigs[_currentConfigIndex];
-                var response = await _apiClient.GetAsync(config.BaseUrl + config.CoursesResource).ConfigureAwait(false);
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<IEnumerable<Course>>(content);
+                var requestPath = $"{config.BaseUrl}{config.CoursesResource}";
+
+                _logger.LogInformation($"Making request to {requestPath}");
+
+                var response = await _apiClient.GetAsync(requestPath).ConfigureAwait(false);
+                var courses = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                return JsonConvert.DeserializeObject<IEnumerable<Course>>(courses);
             });
         }
     }

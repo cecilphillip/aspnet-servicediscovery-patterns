@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/point_to_point/src/SchoolAPI/SchoolAPI.csproj"
+                "${workspaceRoot}/SchoolClient.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

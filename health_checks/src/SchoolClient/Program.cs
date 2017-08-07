@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SchoolClient
 {
@@ -13,13 +14,20 @@ namespace SchoolClient
         public static void Main(string[] args)
         {
             LoadConfig();
-            _apiClient = new ApiClient(_configuration);
+            var logger = new LoggerFactory().AddConsole().CreateLogger<ApiClient>();
+            _apiClient = new ApiClient(_configuration, logger);
 
-            ListStudents().Wait();
-            ListCourses().Wait();
+            try
+            {
+                ListStudents().Wait();
+                ListCourses().Wait();
+            }
+            catch (Exception)
+            {
+                logger.LogError("Unable to request resource");
+            }
 
             Console.ReadLine();
-            Console.ResetColor();
         }
 
         private static void LoadConfig()
@@ -34,13 +42,13 @@ namespace SchoolClient
         private static async Task ListStudents()
         {
             var students = await _apiClient.GetStudents();
-            Console.WriteLine($"Student Count: {students.Count()}");
+            Console.WriteLine($"Student Count: {students.Count()}\n");
         }
 
         private static async Task ListCourses()
         {
             var courses = await _apiClient.GetCourses();
-            Console.WriteLine($"Courses Count: {courses.Count()}");
+            Console.WriteLine($"Coursee Count: {courses.Count()}\n");
         }
     }
 }

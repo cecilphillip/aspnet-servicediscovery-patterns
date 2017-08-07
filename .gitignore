@@ -26,6 +26,7 @@ nuget.exe
 *.*sdf
 *.ipch
 *.sln.ide
+*.idea
 .settings
 node_modules
 bower_components

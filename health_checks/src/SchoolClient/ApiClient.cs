@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Consul;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
@@ -21,9 +22,11 @@ namespace SchoolClient
         private readonly RetryPolicy _serverRetryPolicy;
         private readonly ConsulClient _consulClient;
         private int _currentConfigIndex;
+        private readonly ILogger<ApiClient> _logger;
 
-        public ApiClient(IConfigurationRoot configuration)
+        public ApiClient(IConfigurationRoot configuration, ILogger<ApiClient> logger)
         {
+            _logger = logger;
             _configuration = configuration;
 
             _apiClient = new HttpClient();
@@ -36,18 +39,23 @@ namespace SchoolClient
                 c.Address = uri;
             });
 
+            _logger.LogInformation("Discovering Services from Consul.");
             var services = _consulClient.Agent.Services().Result.Response;
             foreach (var service in services)
             {
                 var isSchoolApi = service.Value.Service == _configuration["consulConfig:serviceName"];
                 if (isSchoolApi)
                 {
+                    var checks = _consulClient.Health.Checks(_configuration["consulConfig:serviceName"]).Result;
+
                     var serviceUri = new Uri($"{service.Value.Address}:{service.Value.Port}");
                     _serverUrls.Add(serviceUri);
                 }
             }
+            _logger.LogInformation($"{_serverUrls.Count} endpoints found.");
 
-            var retries = _serverUrls.Count * 2;
+            var retries = _serverUrls.Count * 2 - 1;
+            _logger.LogInformation($"Retry count set to {retries}");
             _serverRetryPolicy = Policy.Handle<HttpRequestException>()
                .RetryAsync(retries, (exception, retryCount) =>
                {
@@ -58,7 +66,7 @@ namespace SchoolClient
         {
             if (retryCount % 2 == 0)
             {
-                Console.WriteLine("trying next server... \n");
+                Console.WriteLine("Trying next server... \n");
                 _currentConfigIndex++;
 
                 if (_currentConfigIndex > _serverUrls.Count - 1)
@@ -74,8 +82,12 @@ namespace SchoolClient
             return await _serverRetryPolicy.ExecuteAsync(async () =>
                 {
                     var serverUrl = _serverUrls[_currentConfigIndex];
-                    var response = await _apiClient.GetAsync(new Uri(serverUrl, "api/students")).ConfigureAwait(false);
+                    var requestPath = $"{serverUrl}api/students";
+
+                    _logger.LogInformation($"Making request to {requestPath}");
+                    var response = await _apiClient.GetAsync(requestPath).ConfigureAwait(false);
                     var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
                     return JsonConvert.DeserializeObject<IEnumerable<Student>>(content);
                 });
         }
@@ -88,8 +100,12 @@ namespace SchoolClient
             return await _serverRetryPolicy.ExecuteAsync(async () =>
             {
                 var serverUrl = _serverUrls[_currentConfigIndex];
-                var response = await _apiClient.GetAsync(new Uri(serverUrl, "api/courses")).ConfigureAwait(false);
+                var requestPath = $"{serverUrl}api/courses";
+
+                _logger.LogInformation($"Making request to {requestPath}");
+                var response = await _apiClient.GetAsync(requestPath).ConfigureAwait(false);
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
                 return JsonConvert.DeserializeObject<IEnumerable<Course>>(content);
             });
         }
@@ -100,7 +116,7 @@ namespace SchoolClient
             foreach (var entry in checks.Response)
             {
                 var check = entry.Checks.SingleOrDefault(c => c.ServiceName == "school-api");
-                if(check == null) continue;
+                if (check == null) continue;
                 var isPassing = check.Status == HealthStatus.Passing;
                 var serviceUri = new Uri($"{entry.Service.Address}:{entry.Service.Port}");
                 if (isPassing)
