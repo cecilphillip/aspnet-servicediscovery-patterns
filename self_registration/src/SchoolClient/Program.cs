@@ -16,10 +16,11 @@ namespace SchoolClient
             LoadConfig();
             var logger = new LoggerFactory().AddConsole().CreateLogger<ApiClient>();
             _apiClient = new ApiClient(_configuration, logger);
-            _apiClient.Initialize().Wait();
 
             try
             {
+                _apiClient.Initialize().Wait();
+
                 ListStudents().Wait();
                 ListCourses().Wait();
             }

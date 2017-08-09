@@ -38,13 +38,13 @@ namespace SchoolAPI.Infrastructure
                     Tags = new[] { "Students", "Courses", "School" }
                 };
 
-                logger.LogInformation("Registering from Consul");
+                logger.LogInformation("Registering in Consul");
                 consulClient.Agent.ServiceDeregister(registration.ID).Wait();
                 consulClient.Agent.ServiceRegister(registration).Wait();
 
                 lifetime.ApplicationStopping.Register(() => {
                     logger.LogInformation("Deregistering from Consul");
-                    consulClient.Agent.ServiceDeregister(registration.ID).Wait();                    
+                    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
                 });
             }
             catch (Exception x)
@@ -53,6 +53,6 @@ namespace SchoolAPI.Infrastructure
             }
 
             return app;
-        }      
+        }
     }
 }

@@ -57,9 +57,10 @@ namespace SchoolClient
             _logger.LogInformation($"Reply Queue: {_replyQueueName}\nCorrelation ID: {corrId}");
 
             var messageBytes = Encoding.UTF8.GetBytes(message);
+
+            _logger.LogInformation($"Publishing message: {message}");
             _model.BasicPublish("", _sendQueue, props, messageBytes);
 
-            _logger.LogInformation("Publishing message");
             while (true)
             {
                 var delivery = _subscription.Next();

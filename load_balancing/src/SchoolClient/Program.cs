@@ -44,13 +44,13 @@ namespace SchoolClient
         private static void ListStudents()
         {
             var students = _apiClient.GetStudents();
-            Console.WriteLine($"{students.Count()}");
+            Console.WriteLine($"Student Count: {students.Count()}");
         }
 
         private static void ListCourses()
         {
             var courses = _apiClient.GetCourses();
-            Console.WriteLine($"{courses.Count()}");
+            Console.WriteLine($"Course Count: {courses.Count()}");
         }
     }
 }

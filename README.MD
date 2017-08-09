@@ -2,7 +2,6 @@
 
 This repo contains a samples of implementing Service Discovery patterns with ASP.NET Core using tools like [Consul](https://www.consul.io) and [RabbitMQ](http://www.rabbitmq.com/)
 
-These were originally used as demos for a talk I gave at a [dotNet Miami Meetup](http://www.meetup.com/dotNetMiami/events/232614545/).
 
 ### Patterns Covered
 - [Point to Point](point_to_point/README.MD) <- start here :)
