@@ -27,7 +27,7 @@ namespace SchoolService
                 Password = config.Password
             };
 
-            _connection = _connectionFactory.CreateConnection();
+            _connection = _connectionFactory.CreateConnection("QueueProcessor Connection");
             _model = _connection.CreateModel();
             _model.BasicQos(0, 1, false);
 
@@ -78,6 +78,9 @@ namespace SchoolService
 
             Console.WriteLine("Press [enter] to exit.");
             Console.ReadLine();
+            
+            _model.Dispose();
+            _connection.Dispose();
         }
     }
 }

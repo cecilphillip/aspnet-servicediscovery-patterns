@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -12,18 +13,10 @@ namespace SchoolAPI
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .Build();
-
             var freePort = FreeTcpPort();
 
-            var host = new WebHostBuilder()
-                .UseConfiguration(config)
+            var host = WebHost.CreateDefaultBuilder(args)
                 .UseUrls($"http://localhost:{freePort}")
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
 

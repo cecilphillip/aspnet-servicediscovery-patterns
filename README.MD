@@ -1,6 +1,8 @@
 # Service Discovery Patterns with ASP.NET Core
 
-This repo contains a samples of implementing Service Discovery patterns with ASP.NET Core using tools like [Consul](https://www.consul.io) and [RabbitMQ](http://www.rabbitmq.com/)
+This repo contains a samples of implementing Service Discovery patterns with ASP.NET Core using tools like [Consul](https://www.consul.io) and [RabbitMQ](http://www.rabbitmq.com/).
+
+The master branch is currently using .NET Core 2.0 and ASP.NET Core 2.0. If you want to see the ASP.NET Core 1.1 version of the sample see the [aspnetcore1.1 tag](cecilphillip/aspnet-servicediscovery-patterns/tree/aspnetcore1.1)
 
 
 ### Patterns Covered
