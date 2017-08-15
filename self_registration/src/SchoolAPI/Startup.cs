@@ -2,8 +2,10 @@
 using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -16,7 +18,6 @@ namespace SchoolAPI
     {
         public Startup(IConfiguration config)
         {
-
             Configuration = config;
         }
 
@@ -25,6 +26,7 @@ namespace SchoolAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<DataStore>();
+            services.AddSingleton<IHostedService, ConsulHostedService>();
             services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
@@ -68,7 +70,6 @@ namespace SchoolAPI
                 app.UseDeveloperExceptionPage();
             }
 
-
             app.UseMvc();
 
             app.UseSwagger(c =>
@@ -82,8 +83,6 @@ namespace SchoolAPI
             });
 
             app.UseWelcomePage();
-
-            app.RegisterWithConsul(lifetime);
         }
     }
 }

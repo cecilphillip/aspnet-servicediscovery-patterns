@@ -58,12 +58,12 @@ namespace SchoolAPI.Controllers.API
 
             return Ok();
         }
-        
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             var exisitingCourse = _dataStore.Courses.SingleOrDefault(c => c.ID == id);
-            
+
             if (exisitingCourse == null) return NotFound();
 
             _dataStore.Courses.Remove(exisitingCourse);
